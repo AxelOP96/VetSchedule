@@ -7,6 +7,8 @@ const sintomasInput = d.querySelector('#sintomas')
 
 const formulario = d.querySelector('#formulario-cita')
 
+const contenedorCitas = d.querySelector('#citas');
+
 const citaObj = {
     paciente: '',
     propietario : '',
@@ -31,22 +33,6 @@ sintomasInput.addEventListener('change', (e) =>{
     citaObj[e.target.name] = e.target.value;
 })
 formulario.addEventListener('submit', submitCita);
-
-function submitCita(e) {
-    e.preventDefault();
-    const  {paciente, propietario, email, fecha, sintomas} = citaObj;
-    if(Object.values(citaObj).some(valor => valor.trim() === '')){
-        const notification = new Notificacion({
-            texto: 'Todos los campos son obligatorios',
-            tipo: 'error'
-        })
-    
-        return
-    }
-        
-
-}
-
 class Notificacion {
 
     constructor({texto, tipo}) {
@@ -73,3 +59,49 @@ class Notificacion {
         }, 3000)
     }
 }
+class AdminCitas {
+    constructor(){
+        this.citas = []
+    }
+    agregar(cita) {
+        this.citas = [...this.citas, cita]
+        this.mostrar()
+    }
+
+    mostrar(){
+        while(contenedorCitas.firstChild) {
+            contenedorCitas.removeChild(contenedorCitas.firstChild)
+        }
+
+        this.citas.forEach( cita => {
+            const divCita = d.createElement('div')
+            divCita.classList.add('mx-5', 'my-10', 'bg-white', 'shadow-md', 'px-5', 'py-10', 'rounded-xl')
+
+            const paciente = d.createElement('p')
+            paciente.classList.add('font-normal', 'mb-3', 'text-gray-700', 'normal-case')
+            paciente.innerHTML = `<span class="font-bold uppercase">Paciente: </span> ${cita.paciente}`
+
+            divCita.appendChild(paciente)
+            contenedorCitas.appendChild(divCita)
+        })
+    }
+}
+
+const citas = new AdminCitas();
+function submitCita(e) {
+    e.preventDefault();
+    const  {paciente, propietario, email, fecha, sintomas} = citaObj;
+    if(Object.values(citaObj).some(valor => valor.trim() === '')){
+        const notification = new Notificacion({
+            texto: 'Todos los campos son obligatorios',
+            tipo: 'error'
+        })
+    
+        return
+    }
+        
+    citas.agregar(citaObj)
+}
+
+
+
