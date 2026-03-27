@@ -5,6 +5,8 @@ const emailInput = d.querySelector('#email')
 const fechaInput = d.querySelector('#fecha')
 const sintomasInput = d.querySelector('#sintomas')
 
+const formulario = d.querySelector('#formulario-cita')
+
 const citaObj = {
     paciente: '',
     propietario : '',
@@ -28,3 +30,14 @@ fechaInput.addEventListener('change', (e) =>{
 sintomasInput.addEventListener('change', (e) =>{
     citaObj[e.target.name] = e.target.value;
 })
+formulario.addEventListener('submit', submitCita);
+
+function submitCita(e) {
+    e.preventDefault();
+    const  {paciente, propietario, email, fecha, sintomas} = citaObj;
+    if(Object.values(citaObj).some(valor => valor.trim() === '')){
+        return
+    }
+        
+
+}
